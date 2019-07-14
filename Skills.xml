@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<skills>
+
+	<skill Name="First Aid" Load="Merge">
+		<power Name="Apply Injector" Cost="100" Attribute="Intelligence" Minimum="0" Class="Firstaid_ApplyInjector" Snippet="applying injector" Description="Activated.  You apply all equipped injectors into an adjacent non-hostile creature using Short Blades skills, bypassing their AV to apply the tonic.  Missing in combat results in a chance to fumble and drop the injector."></power>
+	</skill>
+</skills>
