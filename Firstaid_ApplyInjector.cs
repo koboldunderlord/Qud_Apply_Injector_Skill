@@ -2,7 +2,7 @@ using System;
 using XRL.Language;
 using XRL.Messages;
 using XRL.UI;
-using XRL.World.Parts.Effects;
+using XRL.World.Effects;
 using System.Collections.Generic;
 using XRL.Rules;
 
@@ -59,7 +59,7 @@ namespace XRL.World.Parts.Skill
 				if (Cell != null)
 				{
 					// Get all valid targets, respecting phasing/flying/light
-					List<GameObject> Targets = Cell.GetObjectsWithPart("Brain", ParentObject, ParentObject, ParentObject, true, true, true);
+					List<GameObject> Targets = Cell.GetObjectsWithPartReadonly("Brain");
 					// Remove hostile targets
 					Targets.RemoveAll(T => T.pBrain.IsHostileTowards(ParentObject));
 
@@ -153,9 +153,11 @@ namespace XRL.World.Parts.Skill
 							
 						} 
 
-						IPart.AddPlayerMessage("firing injector");
+						IPart.AddPlayerMessage("&gYou apply the " + Injector.DisplayName + " to " + Target.ShortDisplayName + "!");
+
 						// no hostiles or didn't miss - fire the injector
-						Injector.FireEvent(Event.New("InvCommandApply", "Owner", Target, "Attacker", ParentObject));
+						Injector.FireEvent(Event.New("ApplyTonic", "Target", Target, "Attacker", ParentObject));
+						Injector.Destroy((string) null, false, false);
 					}
 
 					// Deal with energy cost - reduced by short blades skill
@@ -171,12 +173,17 @@ namespace XRL.World.Parts.Skill
 			return false;
 		}
 
+		private void AddAbility()
+	    {
+	      this.ActivatedAbilityID = this.AddMyActivatedAbility("Apply Injector", "CommandApplyInjector", "Skill", "Apply an injector upon an ally.");
+	    }
+
 		public override bool AddSkill(GameObject GO)
 		{
 			ActivatedAbilities activatedAbilities = GO.GetPart("ActivatedAbilities") as ActivatedAbilities;
 			if (activatedAbilities != null)
 			{
-				ActivatedAbilityID = activatedAbilities.AddAbility("Apply Injector", "CommandApplyInjector", "Skill", -1);
+				AddAbility();
 			}
 			return true;
 		}
